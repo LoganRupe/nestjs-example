@@ -1,0 +1,42 @@
+version: "3.8"
+
+volumes:
+  nestjs_example_worker_node_modules:
+
+services:
+  nestjs-example-api:
+    build: 
+        context: ./
+        target: production
+        cache_from:
+            - node:14-alpine
+    env_file: ./.env
+    networks:
+      - nestexnet
+    ports:
+      - ${PORT}:${PORT}
+
+  worker:
+    build: 
+        context: ./
+        target: development
+        cache_from:
+            - node:14-alpine
+    env_file: ./.env
+    volumes:
+      # Get the code in the container
+      - .:/home/node/app
+      # Mount a persistent volume to "node_modules"
+      # so we can cache between docker-compose runs
+      # Based on: https://stackoverflow.com/questions/29181032/add-a-volume-to-docker-but-exclude-a-sub-folder
+      - nestjs_example_worker_node_modules:/home/node/app/node_modules/
+    working_dir: /home/node/app
+    entrypoint: []
+    networks:
+        nestexnet:
+    ports:
+      - ${PORT}:${PORT}
+      - ${DEBUG_PORT}:${DEBUG_PORT}
+
+networks:
+    nestexnet:
