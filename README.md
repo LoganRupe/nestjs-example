@@ -93,7 +93,7 @@ make lint
 make build_container IMAGE_NAME="<your-image-name>"
 
 # Builds and runs a prod container. Uses the .env vars
-# Visit http://localhost:5088/api/health
+# Visit http://localhost:3000/health
 make start_container
 
 # Builds prod container and opens a shell. Uses the .env vars
