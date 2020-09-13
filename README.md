@@ -89,6 +89,9 @@ make dev
 make debug
 make lint
 
+# Adds a NPM package (to package.json and yarn.lock)
+make add YARNPKG=typescript
+
 # Builds a prod container locally. You can omit IMAGE_NAME
 make build_container IMAGE_NAME="<your-image-name>"
 
