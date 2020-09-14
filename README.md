@@ -10,13 +10,14 @@ NestJS Example - Test / Playground area
   - [The 3 Musketeers Commands (Make)](#the-3-musketeers-commands-make)
   - **[Docker 3M Development (preferred)](#docker-3m-development-preferred)**
   - [Build production container](#build-production-container)
-- [Tools used / Useful links](#-tools-used-/-useful-links)
+- [Swagger / OpenAPI](#swagger-/-openapi)
+- [Tools used / Useful links](#tools-used-/-useful-links)
 
 ## About
 
 This is a NestJS example used as a testing area.
 
-This is built with (`RestJS`, `Fastify`, `Yarn`, `Typescript`, `Docker`).
+This is built with (`NestJS`, `Fastify`, `Yarn`, `Typescript`, `Docker`).
 
 ## Local Development
 NOTE: Best to use Docker/3M for development. See: [Docker 3M Development (preferred)](#docker-3m-development-preferred)
@@ -137,6 +138,15 @@ Run the following commands:
 ```
 make build_container
 ```
+
+## Swagger / OpenAPI
+The [OpenAPI](https://swagger.io/specification/) specification (formerly Swagger) is a language-agnostic definition format used to describe RESTful APIs.
+
+Example API makes available an OpenAPI/Swagger document on:
+
+- [http://localhost:3000/api]()
+
+The OpenAPI document is set through the use of attributes and documentation (through: Controllers, Schemas and DTOs) and built with (`@nestjs/swagger`, `fastify-swagger`).
 
 ## Tools used / Useful links
  - [NestJS](https://nestjs.com) - a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
