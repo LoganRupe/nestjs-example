@@ -57,7 +57,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "{{access_token}}",
 							"type": "string"
 						}
 					]
