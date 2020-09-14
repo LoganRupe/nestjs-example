@@ -11,4 +11,7 @@ export class UserDto extends UserLoginDto {
   @ApiProperty({ example: ['Admin'], description: 'The list of roles assigned to the User', enum: ['Admin', 'User'] })
   @IsArray()
   readonly roles: string[];
+
+  // Used in jwt.strategy
+  readonly sub?: number;
 }
