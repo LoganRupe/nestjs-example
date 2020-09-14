@@ -3,15 +3,29 @@ IMAGE_NAME=nestjs-example
 WORKER=docker-compose run --name nestjs-dev-worker --service-ports --rm worker
 SERVICE=docker-compose run --name nestjs-prod-service --service-ports --rm nestjs-example-api
 
+YARNPKG=
+
 # Tell Make, that these are commands, not files. This is needed when there're files with the same name.
 # Based on: https://stackoverflow.com/questions/2145590/what-is-the-purpose-of-phony-in-a-makefile
-.PHONY: install build test dev debug lint audit clean sweep
+.PHONY: install add build test dev debug lint audit clean sweep
 
 install:
 	$(WORKER) make _install
 
 _install:
 	yarn install
+
+# Adds a NPM package (to package.json and yarn.lock)
+add: 
+	$(WORKER) make _add YARNPKG=$(YARNPKG)
+
+_add:
+	if test -z ${YARNPKG}; then \
+		echo "No package provided."; \
+		echo "Usage/example: make add YARNPKG=typescript"; \
+	else \
+		yarn add $(YARNPKG); \
+	fi
 
 build:
 	$(WORKER) make _build
