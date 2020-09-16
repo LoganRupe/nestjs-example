@@ -1,19 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
 import { CatDto } from './dto/cat.dto';
 
 @Injectable()
 export class CatsService {
-  private readonly cats: CatDto[] = [];
+  constructor(@Inject('CAT_MODEL') private readonly catModel: Model<CatDto>) {}
 
   create(cat: CatDto) {
-    this.cats.push(cat);
+    const createdCat = new this.catModel(cat);
+    return createdCat.save();
   }
 
-  findAll(): CatDto[] {
-    return this.cats;
+  findAll(): Promise<CatDto[]> {
+    return this.catModel.find().exec();
   }
   
-  findOne(id: number): CatDto {
-    return this.cats[id];
+  findOne(id: number): any {
+    return this.catModel.findOne({ id: id }).exec();
   }
 }

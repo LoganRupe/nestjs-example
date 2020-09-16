@@ -32,3 +32,10 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Mongo
+/assets/mongo/data
+/assets/mongo/dump
+
+# Docker Environment Variables (Can be appended/overriden by Build Pipelines, don't commit changes)
+.env

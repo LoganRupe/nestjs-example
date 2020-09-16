@@ -58,3 +58,18 @@ FROM base as development
 
 # Install make.
 RUN apk add --update --no-cache make=4.2.1-r2
+
+#**********
+# * MONGO *
+#**********
+
+FROM mongo:latest as mongo-auth
+
+EXPOSE 27017 27017
+
+COPY assets/mongo/scripts/*.sh /
+
+RUN chmod +x /run.sh
+RUN chmod +x /set_mongodb_password.sh
+
+CMD ["/run.sh"]

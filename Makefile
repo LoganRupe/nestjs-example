@@ -63,6 +63,10 @@ audit:
 _audit:
 	yarn audit
 
+# Starts Mongo Express (Web Based Mongo Admin Interface)
+mongo_express:
+	docker-compose up -d mongo-express
+
 # Builds a production container. You can change via the IMAGE_NAME var.
 # e.g. make build_container IMAGE_NAME=my-container
 build_container:
