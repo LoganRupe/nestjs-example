@@ -56,8 +56,8 @@ yarn debug
 
 * /assets           
 * /assets/nestjs.postman_collection.json    # Postman collection for testing API
-* /assets/mongo/data                        # Mongo Database (Docker Volume for persistance) [git ignored]
 * /assets/mongo/dump                        # Docker Volume for Mongo Database Data Pumps exports [git ignored]
+* /assets/mongo/scripts/                    # Shell scripts used in custom Mongo Docker image for Auth
 
 * /src
 * /src/cats                                 # Cats Module
