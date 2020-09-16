@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Document } from 'mongoose';
 import { IsInt, IsString } from 'class-validator';
 
-export class CatDto {
+export class CatDto extends Document {
   @ApiProperty({ example: 'Kitty', description: 'The name of the Cat' })
   @IsString()
   readonly name: string;

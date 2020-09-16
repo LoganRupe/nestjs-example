@@ -2,6 +2,10 @@ version: "3.8"
 
 volumes:
   nestjs_example_worker_node_modules:
+  mongodata:
+
+networks:
+  nestexnet:
 
 services:
   nestjs-example-api:
@@ -10,11 +14,17 @@ services:
         target: production
         cache_from:
             - node:14-alpine
+    depends_on:
+      - mongo
     env_file: ./.env
     networks:
       - nestexnet
     ports:
       - ${PORT}:${PORT}
+    environment:
+      MONGO_CONNECTION_STRING: ${MONGO_NEST_CONNECTION_STRING}
+      MONGO_USERNAME: ${MONGO_NEST_USERNAME}
+      MONGO_PASSWORD: ${MONGO_NEST_PASSWORD}
 
   worker:
     build: 
@@ -22,6 +32,8 @@ services:
         target: development
         cache_from:
             - node:14-alpine
+    depends_on:
+      - mongo
     env_file: ./.env
     volumes:
       # Get the code in the container
@@ -37,6 +49,49 @@ services:
     ports:
       - ${PORT}:${PORT}
       - ${DEBUG_PORT}:${DEBUG_PORT}
+    environment:
+      MONGO_CONNECTION_STRING: ${MONGO_NEST_CONNECTION_STRING}
+      MONGO_USERNAME: ${MONGO_NEST_USERNAME}
+      MONGO_PASSWORD: ${MONGO_NEST_PASSWORD}
 
-networks:
-    nestexnet:
+  mongo:
+    build: 
+      context: ./
+      target: mongo-auth
+      cache_from:
+          - mongo:latest
+    env_file: ./.env
+    restart: always
+    # For more information visit the Mongo Docker website here: https://hub.docker.com/_/mongo
+    #ports:           # Uncomment to expose MongoDB
+    #  - 27017:27017
+    volumes:
+      # Provide volume to import/export Mongo Database extracts
+      - ./assets/mongo/dump:/dump
+      # Persist Database
+      - mongodata:/data/db
+    networks:
+        nestexnet:
+    environment:
+      AUTH: 'yes'
+      MONGO_ADMIN_USERNAME: ${MONGO_ADMIN_USERNAME}
+      MONGO_ADMIN_PASSWORD: ${MONGO_ADMIN_PASSWORD}
+      MONGO_NEST_DATABASE: ${MONGO_NEST_DATABASE}
+      MONGO_NEST_USERNAME: ${MONGO_NEST_USERNAME}
+      MONGO_NEST_PASSWORD: ${MONGO_NEST_PASSWORD}
+
+  mongo-express:
+    image: mongo-express
+    env_file: ./.env
+    depends_on:
+      - mongo
+    restart: always
+    ports:
+      - ${MONGO_EXPRESS_PORT}:${MONGO_EXPRESS_PORT}
+    networks:
+        nestexnet:
+    environment:      
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ADMIN_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ADMIN_PASSWORD}
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
