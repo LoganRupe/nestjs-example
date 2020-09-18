@@ -40,3 +40,4 @@ junit.xml
 
 # Docker Environment Variables (Can be appended/overriden by Build Pipelines, don't commit changes)
 .env
+assets/postman/newman-report.xml

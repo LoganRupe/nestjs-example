@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ce60a2ca-d35f-49c4-96a2-b2d516c1d8e5",
+		"_postman_id": "971d4208-4be3-4239-9b0f-72c2e008487d",
 		"name": "NestJS Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,8 +11,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "dd9323cb-bf25-4502-acca-d510392490e0",
+						"id": "5afc8e70-9d2c-4bd8-9fa3-45171b8c9bb7",
 						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
 							"var jsonData = JSON.parse(responseBody);\r",
 							"pm.collectionVariables.set('access_token', jsonData.data.access_token);"
 						],
@@ -35,12 +38,12 @@
 					"raw": "{\n    \"username\": \"john\",\n    \"password\": \"changeme\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/auth/login",
-					"protocol": "http",
+					"raw": "{{BASE_PROTOCOL}}://{{BASE_URL}}:{{BASE_PORT}}/auth/login",
+					"protocol": "{{BASE_PROTOCOL}}",
 					"host": [
-						"localhost"
+						"{{BASE_URL}}"
 					],
-					"port": "3000",
+					"port": "{{BASE_PORT}}",
 					"path": [
 						"auth",
 						"login"
@@ -51,6 +54,20 @@
 		},
 		{
 			"name": "Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d335dc9a-d70f-49c2-9799-a72ffa3fa4b7",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -65,12 +82,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/profile",
-					"protocol": "http",
+					"raw": "{{BASE_PROTOCOL}}://{{BASE_URL}}:{{BASE_PORT}}/profile",
+					"protocol": "{{BASE_PROTOCOL}}",
 					"host": [
-						"localhost"
+						"{{BASE_URL}}"
 					],
-					"port": "3000",
+					"port": "{{BASE_PORT}}",
 					"path": [
 						"profile"
 					]
@@ -80,6 +97,20 @@
 		},
 		{
 			"name": "Create Cat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3793eff9-6092-4a89-a247-92e79b2a2467",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -105,12 +136,12 @@
 					"raw": "{\n    \"name\": \"Puss\",\n    \"age\": 5,\n    \"breed\": \"moggy\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/cats",
-					"protocol": "http",
+					"raw": "{{BASE_PROTOCOL}}://{{BASE_URL}}:{{BASE_PORT}}/cats",
+					"protocol": "{{BASE_PROTOCOL}}",
 					"host": [
-						"localhost"
+						"{{BASE_URL}}"
 					],
-					"port": "3000",
+					"port": "{{BASE_PORT}}",
 					"path": [
 						"cats"
 					]
@@ -120,6 +151,20 @@
 		},
 		{
 			"name": "Get All Cats",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f5309b29-34f1-493c-8cb2-d6b8c5c1268b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -148,12 +193,12 @@
 					"raw": "{\n    \"name\": \"Puss\",\n    \"age\": 5,\n    \"breed\": \"moggy\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/cats",
-					"protocol": "http",
+					"raw": "{{BASE_PROTOCOL}}://{{BASE_URL}}:{{BASE_PORT}}/cats",
+					"protocol": "{{BASE_PROTOCOL}}",
 					"host": [
-						"localhost"
+						"{{BASE_URL}}"
 					],
-					"port": "3000",
+					"port": "{{BASE_PORT}}",
 					"path": [
 						"cats"
 					]
@@ -166,7 +211,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "166c3afb-c77e-44b5-b6db-fa336c75bf0a",
+				"id": "190c0bdd-6520-4dd1-8c3b-b91de3f9a619",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -176,7 +221,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "d024dd2e-5c27-400c-a347-a8c5abe3674e",
+				"id": "eb8a124e-7e7b-4aa3-bf62-39a5e8b66e67",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -186,9 +231,25 @@
 	],
 	"variable": [
 		{
-			"id": "a635e59f-3e34-411a-add0-2a4415c48e74",
+			"id": "3e1807d0-4268-4ea1-911f-5bc93570b293",
+			"key": "BASE_PROTOCOL",
+			"value": "http"
+		},
+		{
+			"id": "eb239890-5115-4d0e-92fd-248399fa3184",
+			"key": "BASE_URL",
+			"value": "localhost"
+		},
+		{
+			"id": "9c0740aa-32cf-456b-ae33-526eafe2395c",
+			"key": "BASE_PORT",
+			"value": "3000"
+		},
+		{
+			"id": "a02b5604-2dcd-4890-89e6-cc27aa632dd5",
 			"key": "access_token",
-			"value": ""
+			"value": "abc123456789"
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }

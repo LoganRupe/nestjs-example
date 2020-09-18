@@ -2,6 +2,7 @@ IMAGE_NAME=nestjs-example
 
 WORKER=docker-compose run --name nestjs-dev-worker --service-ports --rm worker
 SERVICE=docker-compose run --name nestjs-prod-service --service-ports --rm nestjs-example-api
+POSTMAN=docker-compose run --name postman-newman-test-api --service-ports --rm postman-newman
 
 YARNPKG=
 
@@ -62,6 +63,10 @@ audit:
 
 _audit:
 	yarn audit
+
+# Postman / Newman Test API
+test_api:
+	$(POSTMAN) run nestjs.postman_collection.json --environment=nestjs.postman_environment.json --reporters cli, junit --reporter-junit-export="newman-report.xml"
 
 # Starts Mongo Express (Web Based Mongo Admin Interface)
 mongo_express:

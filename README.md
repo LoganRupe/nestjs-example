@@ -10,6 +10,9 @@ NestJS Example - Test / Playground area
   - [The 3 Musketeers Commands (Make)](#the-3-musketeers-commands-make)
   - **[Docker 3M Development (preferred)](#docker-3m-development-preferred)**
   - [Build production container](#build-production-container)
+- [Testing](#testing)
+  - [Unit testing (with Jest)](#unit-testing-with-jest)
+  - [API testing (with Postman)](#api-testing-with-postman)
 - [Swagger / OpenAPI](#swagger-/-openapi)
 - [Mongo](#mongo)
   - [MongoDB](#mongodb)
@@ -170,6 +173,38 @@ To build a production NestJS Example container run the following commands:
 make build_container
 ```
 
+## Testing
+
+All testing is available through the use of [3 Musketeers](https://3musketeers.io) Make commands to test the containerised app.
+
+### Unit testing (with Jest)
+
+Unit testing is done with the [Jest](https://jestjs.io) framework.
+
+Run unit tests using the following command:
+
+```bash
+make test
+```
+
+### API testing (with Postman)
+
+API Testing is done using [Postman](https://www.postman.com). The test collection and environment files can be found in the [./assets/postman]() directory.
+
+Run API tests using the following steps:
+
+1. Run the following command to start a production container.
+
+```bash
+make start_container
+```
+
+2. Run the following command to start a newman container to run the Postman test collection.
+
+```bash
+make api_test
+```
+
 ## Swagger / OpenAPI
 The [OpenAPI](https://swagger.io/specification/) specification (formerly Swagger) is a language-agnostic definition format used to describe RESTful APIs.
 
@@ -223,3 +258,4 @@ make mongo_express
  - [Three Musketeers](https://3musketeers.io) - a pattern for developing software in a repeatable and consistent manner leveraging Make as an orchestration tool to test, build, run, and deploy applications using Docker and Docker Compose.
  - [MongoDB](https://www.mongodb.com/) - a general purpose, document-based, distributed database built for modern application developers and for the cloud era.
  - [Mongo Docker](https://hub.docker.com/_/mongo) - official image (used in `Dockerfile` and customised to provide authentication).
+ - [Postman Docker](https://hub.docker.com/r/postman/newman/) - official Postman/newman image. [Postman](https://www.postman.com) is an API testing tool.
