@@ -95,3 +95,8 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ADMIN_PASSWORD}
       ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USERNAME}
       ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
+
+  postman-newman:
+    image: postman/newman:alpine
+    volumes:
+      - ./assets/postman:/etc/newman

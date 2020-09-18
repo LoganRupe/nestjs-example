@@ -1,6 +1,5 @@
 node_modules
-assets
-!assets/mongo/scripts
+assets/mongo/dump
 data
 .env
 .vscode
