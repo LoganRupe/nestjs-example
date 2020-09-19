@@ -15,9 +15,7 @@ stages:
   jobs:
   - job: InstallJob
     steps:
-    - task: CMake@1
-      inputs:
-        cmakeArgs: 'install'
+    - script: make install
 - stage: Build
   jobs:
   - job: BuildJob
