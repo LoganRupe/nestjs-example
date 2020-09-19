@@ -189,7 +189,7 @@ make test
 
 ### API testing (with Postman)
 
-API Testing is done using [Postman](https://www.postman.com). The test collection and environment files can be found in the [./assets/postman](nestjs-example/tree/master/assets/postman) directory.
+API Testing is done using [Postman](https://www.postman.com). The test collection and environment files can be found in the [./assets/postman](../../assets/postman) directory.
 
 Run API tests using the following steps:
 
