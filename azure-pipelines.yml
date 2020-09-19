@@ -3,10 +3,28 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
 trigger:
 - master
 
-- task: CMake@1
-  inputs:
-    workingDirectory: 
-    cmakeArgs: 'build'
+pool: Default
+
+stages:
+- stage: Install
+  jobs:
+  - job: InstallJob
+    steps:
+    - script: make install
+- stage: Build
+  jobs:
+  - job: BuildJob
+    steps:
+    - script: make build
+- stage: Test
+  jobs:
+  - job: TestJob
+    steps:
+    - script: make test
+    
+    
