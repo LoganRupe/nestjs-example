@@ -11,14 +11,23 @@ trigger:
 pool: Default
 
 stages:
+- stage: Pre-Install Setup
+  jobs:
+   - job: PreInstallJob
+     steps:
+      - task: DownloadSecureFile@1
+        inputs:
+          secureFile: '.env'
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(Agent.TempDirectory)'
+          Contents: '.env'
+          TargetFolder: '$(Build.SourcesDirectory)'
 - stage: Install
   jobs:
-  - job: InstallJob
-    steps:
-    - task: DownloadSecureFile@1
-      inputs:
-        secureFile: '.env'
-    - script: make install
+   - job: InstallJob
+     steps:
+      - script: make install
 - stage: Build
   jobs:
   - job: BuildJob
