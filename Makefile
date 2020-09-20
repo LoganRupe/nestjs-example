@@ -45,7 +45,7 @@ test:
 	$(WORKER) make _test
 
 _test:
-	yarn test
+	yarn test:report
 
 dev:
 	$(WORKER) make _dev
