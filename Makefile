@@ -1,8 +1,15 @@
 IMAGE_NAME=nestjs-example
 
-WORKER=docker-compose run --name nestjs-dev-worker --service-ports --rm worker
-SERVICE=docker-compose run --name nestjs-prod-service --service-ports --rm nestjs-example-api
-POSTMAN=docker-compose run --name postman-newman-test-api --service-ports --rm postman-newman
+# Set environment variable(s) to allow for multiple containers [e.g. export CONTAINER_NAME_WORKER_SUFFIX=_d]
+CONTAINER_NAME_WORKER:=nestjs-dev-worker$(CONTAINER_NAME_WORKER_SUFFIX)
+
+CONTAINER_NAME_SERVICE:=nestjs-prod-service$(CONTAINER_NAME_SERVICE_SUFFIX)
+
+CONTAINER_NAME_POSTMAN:=postman-newman-test-api$(CONTAINER_NAME_POSTMAN_SUFFIX)
+
+WORKER=docker-compose run --name $(CONTAINER_NAME_WORKER) --service-ports --rm worker
+SERVICE=docker-compose run --name $(CONTAINER_NAME_SERVICE) --service-ports --rm nestjs-example-api
+POSTMAN=docker-compose run --name $(CONTAINER_NAME_POSTMAN) --service-ports --rm postman-newman
 
 YARNPKG=
 
@@ -47,6 +54,8 @@ _dev:
 	yarn start:dev
 
 debug:
+	echo $(CONTAINER_NAME_WORKER_SUFFIX)
+	echo $(CONTAINER_NAME_WORKER)
 	$(WORKER) make _debug
 
 _debug:
