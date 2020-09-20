@@ -28,15 +28,18 @@ stages:
    - job: InstallJob
      steps:
       - script: make install
+        env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: Build
   jobs:
   - job: BuildJob
     steps:
     - script: make build
+      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: Test
   jobs:
   - job: TestJob
     steps:
     - script: make test
+      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
     
     
