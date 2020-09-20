@@ -11,7 +11,7 @@ trigger:
 pool: Default
 
 stages:
-- stage: Pre-Install Setup
+- stage: PreInstall
   jobs:
    - job: PreInstallJob
      steps:
