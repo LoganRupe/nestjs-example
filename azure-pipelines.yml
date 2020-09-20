@@ -25,6 +25,9 @@ stages:
   jobs:
   - job: TestJob
     steps:
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: '.env'
     - script: make test
     
     
