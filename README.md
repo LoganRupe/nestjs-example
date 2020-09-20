@@ -75,7 +75,6 @@ yarn debug
 
 ...
 * /.dockerignore                            # Files/Folders to ignore when Dockerizing directory
-* .env                                      # Environment variables used for Docker [git ignored] - This file can be overridden/appended to via the Build Pipeline
 * ./docker-compose.yml                      # Orchestration for Development Docker containers/services
 * ./Dockerfile                              # Docker image(s) instructions set
 ...
@@ -140,9 +139,20 @@ To run (uses **make** to use Docker).
 git clone https://github.com/LoganRupe/nestjs-example
 ```
 
-2. Append Mongo credentials environment variables to `.env` file:
+2. Create environment variables file (`.env`):
 
 ```bash
+touch .env
+```
+
+3. Place below content in `.env` file:
+
+```bash
+# Common Docker Environment Variables
+PORT=3000
+DEBUG_PORT=9229
+MONGO_EXPRESS_PORT=8081
+
 MONGO_ADMIN_USERNAME=admin
 MONGO_ADMIN_PASSWORD=ExampleAdminPassword123          # !Please change to some other password!
 
@@ -154,11 +164,11 @@ MONGO_NEST_PASSWORD=ExampleNestPassword123            # !Please change!
 MONGO_EXPRESS_USERNAME=express
 MONGO_EXPRESS_PASSWORD=ExampleExpressPassword123      # !Please change!
 ```
-NOTE: Changes to the `.env` file are not checked in due to .gitignore.
+NOTE: The `.env` file is not checked in due to .gitignore.
 
-ALSO NOTE: These variables are not commited by default for security reasons (note: You could append these automagically via your build pipelines).
+ALSO NOTE: These variables are not commited by default for security reasons (note: You could make this file available to your build pipelines securely).
 
-3. Build using the following commands:
+4. Build using the following commands:
 
 ```bash
 make install
