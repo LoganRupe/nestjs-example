@@ -12,6 +12,7 @@ pool: Default
 
 stages:
 - stage: PreInstall
+  displayName: Pre-Install Stage
   jobs:
    - job: PreInstallJob
      steps:
@@ -25,32 +26,36 @@ stages:
           TargetFolder: '$(Build.SourcesDirectory)'
           overWrite: true
 - stage: Install
+  displayName: Install Stage
   jobs:
    - job: InstallJob
      steps:
       - script: make install
         env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: Build
+  displayName: Build Stage
   jobs:
   - job: BuildJob
     steps:
     - script: make build
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
-- stage: Lint
+- stage: Validation
+  displayName: Validation Stage
   jobs:
   - job: LintJob
+    displayName: Lint
     steps:
     - script: make lint
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
-- stage: Audit
-  jobs:
   - job: AuditJob
+    displayName: Audit
+    dependsOn: []
     steps:
     - script: make audit
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
-- stage: Test
-  jobs:
   - job: TestJob
+    displayName: Test (Unit Tests)
+    dependsOn: []
     steps:
     - script: make test
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
