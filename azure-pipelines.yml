@@ -23,6 +23,7 @@ stages:
           SourceFolder: '$(Agent.TempDirectory)'
           Contents: '.env'
           TargetFolder: '$(Build.SourcesDirectory)'
+          overWrite: true
 - stage: Install
   jobs:
    - job: InstallJob
