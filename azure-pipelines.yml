@@ -41,13 +41,13 @@ stages:
   - job: LintJob
     steps:
     - script: make lint
-    env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: Audit
   jobs:
   - job: AuditJob
     steps:
     - script: make audit
-    env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: Test
   jobs:
   - job: TestJob
