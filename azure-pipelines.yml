@@ -36,6 +36,18 @@ stages:
     steps:
     - script: make build
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+- stage: Lint
+  jobs:
+  - job: LintJob
+    steps:
+    - script: make lint
+    env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+- stage: Audit
+  jobs:
+  - job: AuditJob
+    steps:
+    - script: make audit
+    env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: Test
   jobs:
   - job: TestJob
@@ -52,5 +64,3 @@ stages:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
-    
-    
