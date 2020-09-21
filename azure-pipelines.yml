@@ -91,5 +91,6 @@ stages:
     - script: make start_container
   - job: TestAPIJob
     displayName: Test API (postman/newman)
+    dependsOn: [ProdStartServiceJob]
     steps:
     - script: make test_api
