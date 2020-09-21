@@ -10,13 +10,13 @@ trigger:
 
 pool: Default
 
-stages:
-- stage: PreInstall
-  displayName: Pre-Install Stage
+stages:   
+- stage: Install
+  displayName: Install Stage
   jobs:
-   - job: PreInstallJob
-     displayName: Pre-Install
-     steps:
+  - job: PreInstallJob
+    displayName: Pre-Install
+    steps:
       - task: DownloadSecureFile@1
         inputs:
           secureFile: '.env'
@@ -26,12 +26,9 @@ stages:
           Contents: '.env'
           TargetFolder: '$(Build.SourcesDirectory)'
           overWrite: true
-- stage: Install
-  displayName: Install Stage
-  jobs:
-   - job: InstallJob
-     displayName: Install
-     steps:
+  - job: InstallJob
+    displayName: Install
+    steps:
       - script: make install
         env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: Build
