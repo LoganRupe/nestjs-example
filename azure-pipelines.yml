@@ -15,6 +15,7 @@ stages:
   displayName: Pre-Install Stage
   jobs:
    - job: PreInstallJob
+     displayName: Pre-Install
      steps:
       - task: DownloadSecureFile@1
         inputs:
@@ -29,6 +30,7 @@ stages:
   displayName: Install Stage
   jobs:
    - job: InstallJob
+     displayName: Install
      steps:
       - script: make install
         env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
@@ -36,6 +38,7 @@ stages:
   displayName: Build Stage
   jobs:
   - job: BuildJob
+    displayName: Build
     steps:
     - script: make build
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
