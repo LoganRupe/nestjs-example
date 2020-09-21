@@ -28,6 +28,7 @@ stages:
           overWrite: true
   - job: InstallJob
     displayName: Install
+    dependsOn: [PreInstallJob]
     steps:
       - script: make install
         env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
