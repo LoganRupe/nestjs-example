@@ -11,8 +11,8 @@ trigger:
 pool: Default
 
 stages:   
-- stage: Install
-  displayName: Install Stage
+- stage: InstallStage
+  displayName: Install
   jobs:
   - job: PreInstallJob
     displayName: Pre-Install
@@ -32,19 +32,20 @@ stages:
     steps:
       - script: make install
         env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
-- stage: Build
-  displayName: Build Stage
+- stage: DevBuildStage
+  displayName: Development Build
   jobs:
   - job: BuildJob
     displayName: Build
     steps:
     - script: make build
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
-- stage: Validation
-  displayName: Validation Stage
+- stage: CodeVerificationStage
+  displayName: Code Verification (Lint, Audit, Unit Test)
   jobs:
   - job: LintJob
     displayName: Lint
+    dependsOn: []
     steps:
     - script: make lint
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
@@ -70,3 +71,25 @@ stages:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+- stage: ProductionBuildStage
+  displayName: Production Build (image and service)
+  jobs:
+  - job: ProdBuildContainerJob
+    displayName: Build Production Container (Docker Image)
+    steps:
+    - script: make build_container
+  - job: ProdBuildServiceJob
+    displayName: Build Production Service (docker-compose)
+    steps:
+    - script: make build_service
+- stage: ValidateProductionStage
+  displayName: Validate Production (Start Service and API Test)
+  jobs:
+  - job: ProdStartServiceJob
+    displayName: Start Production Service (docker-compose run)
+    steps:
+    - script: make start_container
+  - job: TestAPIJob
+    displayName: Test API (postman/newman)
+    steps:
+    - script: make test_api
