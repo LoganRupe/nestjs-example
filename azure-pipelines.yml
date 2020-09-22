@@ -1,7 +1,5 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# NestJS Example Azure DevOps Pipeline - https://github.com/LoganRupe/nestjs-example
+# More info: https://aka.ms/yaml
 
 variables:
   - group: build-pipeline-vars
@@ -75,16 +73,17 @@ stages:
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
 - stage: ProductionBuildStage
-  displayName: Production Build (image and service)
+  displayName: Production Build (image) 
+# and service)
   jobs:
   - job: ProdBuildContainerJob
     displayName: Build Production Container (Docker Image)
     steps:
     - script: make build_container
-  - job: ProdBuildServiceJob
-    displayName: Build Production Service (docker-compose)
-    steps:
-    - script: make build_service
+#  - job: ProdBuildServiceJob
+#    displayName: Build Production Service (docker-compose)
+#    steps:
+#    - script: make build_service
 - stage: ValidateProductionStage
   displayName: Validate Production (Start Service and API Test)
   jobs:
