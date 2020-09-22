@@ -8,7 +8,7 @@ CONTAINER_NAME_SERVICE:=nestjs-prod-service$(CONTAINER_NAME_SERVICE_SUFFIX)
 CONTAINER_NAME_POSTMAN:=postman-newman-test-api$(CONTAINER_NAME_POSTMAN_SUFFIX)
 
 WORKER=docker-compose run --name $(CONTAINER_NAME_WORKER) --service-ports --rm worker
-SERVICE=docker-compose run --name $(CONTAINER_NAME_SERVICE) --service-ports --rm nestjs-example-api
+SERVICE=docker-compose run -d --name $(CONTAINER_NAME_SERVICE) --service-ports --rm nestjs-example-api
 POSTMAN=docker-compose run --name $(CONTAINER_NAME_POSTMAN) --service-ports --rm postman-newman
 
 YARNPKG=
@@ -94,7 +94,7 @@ build_service:
 build_worker:
 	docker-compose build worker
 
-# Starts the app in a prod container. Uses env vars from .env
+# Starts the app (background) in a prod container. Uses env vars from .env
 start_container:
 	$(SERVICE)
 
