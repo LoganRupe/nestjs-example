@@ -27,7 +27,7 @@ stages:
     steps:
       - task: DownloadSecureFile@1
         inputs:
-          secureFile: '.env'
+          secureFile: '.env - dev'
       - task: CopyFiles@2
         inputs:
           SourceFolder: '$(Agent.TempDirectory)'
