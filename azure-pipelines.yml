@@ -4,6 +4,13 @@
 variables:
   - group: build-pipeline-vars
 
+resources:
+  repositories:
+  - repository: ApiBuildScriptsRepo # The name used to reference this repository in the checkout step
+    type: github
+    endpoint: LoganRupe    
+    name: LoganRupe/api-build-scripts
+
 name: $(Date:yyyyMMdd)$(Rev:.r)
 
 trigger:
@@ -92,55 +99,40 @@ stages:
     steps:
     - script: make start_container
       env: { CONTAINER_NAME_SERVICE_SUFFIX: _d }
-  - job: APIHealthCheckJob
+  - job: APIHealthCheckPwshJob
     displayName: API Health Check
     steps:
-    - powershell: |
-        # First we create the request.
-        $HTTP_Request = [System.Net.WebRequest]::Create($(Url))
-        
-        $count = 0
-        
-        do {
-            $HTTP_Status = 0
-            $count = $count + 1
-            try {
-                # We then get a response from the site.
-                $HTTP_Response = $HTTP_Request.GetResponse()
-                # We then get the HTTP code as an integer.
-                $HTTP_Status = [int]$HTTP_Response.StatusCode
-            } 
-            catch [System.Net.WebException] {
-                $HTTP_Status = -1
-            }
-        
-            If ($HTTP_Status -eq 200) {
-                Write-Host "Site is OK!"
-            }
-            Else {
-                Write-Host "Site not available yet. Retrying in 5 seconds."
-                Start-Sleep -s 5
-            }
-        
-            If ($count -gt 11) {
-                Write-Host "Timed out after 60 seconds. The Site may be down, please check!"        
-                # Finally, we clean up the http request by closing it.
-                If ($HTTP_Response -eq $null) { } 
-                Else { $HTTP_Response.Close() }
-                exit 1
-            }
-        }
-        until ($HTTP_Status -eq 200)
-        
-        # Finally, we clean up the http request by closing it.
-        If ($HTTP_Response -eq $null) { } 
-        Else { $HTTP_Response.Close() }
-      env:
-        Url: $(API_URL)
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
+      path: build_scripts
+    - task: PowerShell@2
+      inputs:
+        filePath: /build_scripts/API_health_checker.ps1
+        arguments: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
+      continueOnError: true
+    condition: eq(variables['agent.os'], 'Windows_NT')
+    dependsOn: [ProdStartServiceJob]
+  - job: APIHealthCheckBashJob
+    displayName: API Health Check
+    steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
+    - task: ShellScript@2
+      inputs:
+        scriptPath: /build_scripts/API_health_checker.sh
+        args: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
+      continueOnError: true
+    condition: in(variables['agent.os'], 'Darwin', 'Linux')
     dependsOn: [ProdStartServiceJob]
   - job: TestAPIJob
     displayName: Test API (postman/newman)
-    dependsOn: [APIHealthCheckJob]
+    dependsOn: [APIHealthCheckPwshJob, APIHealthCheckBashJob]
+    condition: |
+      or
+      (
+        in(dependencies.APIHealthCheckPwshJob.result, 'Succeeded'),
+        in(dependencies.APIHealthCheckBashJob.result, 'Succeeded')
+      )
     steps:
     - script: make test_api
 - stage: CleanStage

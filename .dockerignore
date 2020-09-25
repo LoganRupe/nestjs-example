@@ -1,5 +1,5 @@
 node_modules
 assets/mongo/dump
-data
+build_scripts
 .env
 .vscode

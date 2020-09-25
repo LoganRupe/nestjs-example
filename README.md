@@ -4,6 +4,7 @@ NestJS Example - Test / Playground area
 ## Table of Content
 
 - [About](#about)
+- [Project Structure](#project-structure)
 - [Local Development](#local-development)
 - [Docker and 3M](#docker-and-3m)
   - [Prerequisites](#prerequisites)
@@ -216,6 +217,7 @@ make api_test
 ```
 
 ## Swagger / OpenAPI
+
 The [OpenAPI](https://swagger.io/specification/) specification (formerly Swagger) is a language-agnostic definition format used to describe RESTful APIs.
 
 Example API makes available an OpenAPI/Swagger document on:
@@ -259,6 +261,7 @@ make mongo_express
 2. Visit the Mongo Express website on: [http://localhost:8081]() NOTE: The credentials to login will be whatever you set the environment variables in `.env` to for ***MONGO_EXPRESS_USERNAME*** and ***MONGO_EXPRESS_PASSWORD***.
 
 ## Tools used / Useful links
+
  - [NestJS](https://nestjs.com) - a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
  - [Fastify](https://www.fastify.io/) - a fast and low overhead web framework, for Node.js.
  - [TypeScript](https://www.typescriptlang.org) - an open-source language which builds on JavaScript, one of the world’s most used tools, by adding static type definitions.
