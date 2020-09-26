@@ -140,9 +140,10 @@ stages:
     steps:
     - checkout: self
     - checkout: ApiBuildScriptsRepo
+      path: build_scripts
     - task: ShellScript@2
       inputs:
-        scriptPath: ./api-build-scripts/API_health_checker.sh
+        scriptPath: ./build_scripts/API_health_checker.sh
         args: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
       continueOnError: true
   - job: TestAPIJob
