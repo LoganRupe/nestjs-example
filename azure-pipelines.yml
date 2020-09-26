@@ -128,22 +128,8 @@ stages:
     steps:
     - script: make start_container
       env: { CONTAINER_NAME_SERVICE_SUFFIX: _d }
-  - job: APIHealthCheckPwshJob
+  - job: APIHealthCheckJob
     displayName: API Health Check
-    dependsOn: [ProdStartServiceJob]
-    steps:
-    - checkout: self
-    - checkout: ApiBuildScriptsRepo
-      path: build_scripts
-    - task: PowerShell@2
-      inputs:
-        filePath: /build_scripts/API_health_checker.ps1
-        arguments: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
-      continueOnError: true
-    condition: eq( variables['Agent.OS'], 'Windows_NT' )
-  - job: APIHealthCheckBashJob
-    displayName: API Health Check
-    condition: eq( variables['Agent.OS'], 'Linux' )
     dependsOn: [ProdStartServiceJob]
     steps:
     - checkout: self
@@ -155,13 +141,7 @@ stages:
       continueOnError: true
   - job: TestAPIJob
     displayName: Test API (postman/newman)
-    dependsOn: [APIHealthCheckPwshJob, APIHealthCheckBashJob]
-    condition: |
-      or
-      (
-        in(dependencies.APIHealthCheckPwshJob.result, 'Succeeded'),
-        in(dependencies.APIHealthCheckBashJob.result, 'Succeeded')
-      )
+    dependsOn: APIHealthCheckJob
     steps:
     - script: make test_api
 - stage: CleanStage
