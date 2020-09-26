@@ -26,14 +26,22 @@ stages:
     displayName: Pre-Install
     steps:
       - task: DownloadSecureFile@1
+        displayName: Secure Download Development environment settings (.env)
         inputs:
-          secureFile: '.env'
+          secureFile: $(ENV_FILENAME_DEV)
       - task: CopyFiles@2
+        displayName: Copy environment settings to Source Folder
         inputs:
           SourceFolder: '$(Agent.TempDirectory)'
           Contents: '.env'
           TargetFolder: '$(Build.SourcesDirectory)'
           overWrite: true
+      - task: DeleteFiles@1
+        displayName: 'Delete existing environment settings (.env)'
+        inputs:
+          contents: .env
+      - script: mv $(ENV_FILENAME_DEV) .env
+        displayName: Rename environment settings file to corrent filename
   - job: InstallJob
     displayName: Install
     dependsOn: [PreInstallJob]
@@ -94,6 +102,26 @@ stages:
 - stage: ValidateProductionStage
   displayName: Validate Production (Start Service and API Test)
   jobs:
+  - job: PreProdBuildJob
+    displayName: Pre-Build for Prod
+    steps:
+      - task: DownloadSecureFile@1
+        displayName: Secure Download Production environment settings (.env)
+        inputs:
+          secureFile: $(ENV_FILENAME_PROD)
+      - task: CopyFiles@2
+        displayName: Copy environment settings to Source Folder
+        inputs:
+          SourceFolder: '$(Agent.TempDirectory)'
+          Contents: '.env'
+          TargetFolder: '$(Build.SourcesDirectory)'
+          overWrite: true
+      - task: DeleteFiles@1
+        displayName: 'Delete existing environment settings (.env)'
+        inputs:
+          contents: .env
+      - script: mv $(ENV_FILENAME_PROD) .env
+        displayName: Rename environment settings file to corrent filename
   - job: ProdStartServiceJob
     displayName: Start Production Service (docker-compose run)
     steps:
