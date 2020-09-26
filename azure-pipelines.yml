@@ -46,7 +46,7 @@ stages:
     displayName: Install
     dependsOn: [PreInstallJob]
     steps:
-      - bash: make install
+      - script: make install
         env: 
           CONTAINER_NAME_WORKER_SUFFIX: _d
 - stage: DevBuildStage
@@ -55,7 +55,7 @@ stages:
   - job: BuildJob
     displayName: Build
     steps:
-    - bash: make build
+    - script: make build
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
 - stage: CodeVerificationStage
@@ -65,21 +65,21 @@ stages:
     displayName: Lint
     dependsOn: []
     steps:
-    - bash: make lint
+    - script: make lint
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
   - job: AuditJob
     displayName: Audit
     dependsOn: []
     steps:
-    - bash: make audit
+    - script: make audit
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
   - job: TestJob
     displayName: Test (Unit Tests)
     dependsOn: []
     steps:
-    - bash: make test
+    - script: make test
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
     - task: PublishTestResults@2
@@ -99,11 +99,11 @@ stages:
   - job: ProdBuildContainerJob
     displayName: Build Production Container (Docker Image)
     steps:
-    - bash: make build_container
+    - script: make build_container
 #  - job: ProdBuildServiceJob
 #    displayName: Build Production Service (docker-compose)
 #    steps:
-#    - bash: make build_service
+#    - script: make build_service
 - stage: ValidateProductionStage
   displayName: Validate Production (Start Service and API Test)
   jobs:
@@ -131,7 +131,7 @@ stages:
     displayName: Start Production Service (docker-compose run)
     dependsOn: [PreProdBuildJob]
     steps:
-    - bash: make start_container
+    - script: make start_container
       env: 
         CONTAINER_NAME_SERVICE_SUFFIX: _d
   - job: APIHealthCheckJob
@@ -149,11 +149,11 @@ stages:
     displayName: Test API (postman/newman)
     dependsOn: APIHealthCheckJob
     steps:
-    - bash: make test_api
+    - script: make test_api
 - stage: CleanStage
   displayName: Clean
   jobs:
   - job: CleanJob
     displayName: Clean Container Instances (docker-compose down)
     steps:
-    - bash: make clean
+    - script: make clean
