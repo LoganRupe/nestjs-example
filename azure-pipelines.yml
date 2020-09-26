@@ -24,7 +24,10 @@ stages:
   jobs:
   - job: PreInstallJob
     displayName: Pre-Install
-    steps:
+    steps:      
+      - checkout: self
+      - checkout: ApiBuildScriptsRepo
+        path: s/nestjs-example/build_scripts
       - task: DownloadSecureFile@1
         displayName: Secure Download Development environment settings (.env)
         inputs:
@@ -138,9 +141,6 @@ stages:
     displayName: API Health Check
     dependsOn: [ProdStartServiceJob]
     steps:
-    - checkout: self
-    - checkout: ApiBuildScriptsRepo
-      path: s/nestjs-example/build_scripts
     - task: ShellScript@2
       inputs:
         scriptPath: ./build_scripts/API_health_checker.sh
