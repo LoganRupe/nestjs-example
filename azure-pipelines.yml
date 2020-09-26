@@ -140,10 +140,10 @@ stages:
         filePath: /build_scripts/API_health_checker.ps1
         arguments: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
       continueOnError: true
-    condition: eq(variables['Agent.OS'], 'Windows_NT')
+    condition: eq('$(Agent.OS)', 'Windows_NT')
   - job: APIHealthCheckBashJob
     displayName: API Health Check
-    condition: in(variables['Agent.OS'], 'Darwin', 'Linux')
+    condition: in('$(Agent.OS)', 'Darwin', 'Linux')
     dependsOn: [ProdStartServiceJob]
     steps:
     - checkout: self
