@@ -46,7 +46,7 @@ stages:
     displayName: Install
     dependsOn: [PreInstallJob]
     steps:
-      - script: make install
+      - bash: make install
         env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: DevBuildStage
   displayName: Development Build
@@ -54,7 +54,7 @@ stages:
   - job: BuildJob
     displayName: Build
     steps:
-    - script: make build
+    - bash: make build
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
 - stage: CodeVerificationStage
   displayName: Code Verification (Lint, Audit, Unit Test)
@@ -63,19 +63,19 @@ stages:
     displayName: Lint
     dependsOn: []
     steps:
-    - script: make lint
+    - bash: make lint
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
   - job: AuditJob
     displayName: Audit
     dependsOn: []
     steps:
-    - script: make audit
+    - bash: make audit
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
   - job: TestJob
     displayName: Test (Unit Tests)
     dependsOn: []
     steps:
-    - script: make test
+    - bash: make test
       env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
     - task: PublishTestResults@2
       condition: succeededOrFailed()
@@ -94,11 +94,11 @@ stages:
   - job: ProdBuildContainerJob
     displayName: Build Production Container (Docker Image)
     steps:
-    - script: make build_container
+    - bash: make build_container
 #  - job: ProdBuildServiceJob
 #    displayName: Build Production Service (docker-compose)
 #    steps:
-#    - script: make build_service
+#    - bash: make build_service
 - stage: ValidateProductionStage
   displayName: Validate Production (Start Service and API Test)
   jobs:
@@ -126,7 +126,7 @@ stages:
     displayName: Start Production Service (docker-compose run)
     dependsOn: [PreProdBuildJob]
     steps:
-    - script: make start_container
+    - bash: make start_container
       env: { CONTAINER_NAME_SERVICE_SUFFIX: _d }
   - job: APIHealthCheckJob
     displayName: API Health Check
@@ -143,11 +143,11 @@ stages:
     displayName: Test API (postman/newman)
     dependsOn: APIHealthCheckJob
     steps:
-    - script: make test_api
+    - bash: make test_api
 - stage: CleanStage
   displayName: Clean
   jobs:
   - job: CleanJob
     displayName: Clean Container Instances (docker-compose down)
     steps:
-    - script: make clean
+    - bash: make clean
