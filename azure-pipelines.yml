@@ -140,7 +140,7 @@ stages:
     steps:
     - checkout: self
     - checkout: ApiBuildScriptsRepo
-      path: build_scripts
+      path: s/nestjs-example/build_scripts
     - task: ShellScript@2
       inputs:
         scriptPath: ./build_scripts/API_health_checker.sh
