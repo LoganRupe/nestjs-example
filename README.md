@@ -40,6 +40,7 @@ git clone https://github.com/LoganRupe/nestjs-example
 2. Set environment variables to connect to Mongo database:
 
 ```bash
+export PORT=3000                                                      # The port NestJs API will run on.
 export MONGO_NEST_CONNECTION_STRING=mongodb://mongo.atlasdb.net/nest  # replace variables with your mongodb connection string
 export MONGO_NEST_USERNAME=nest                                       #  and credentials
 export MONGO_NEST_PASSWORD=ExampleNestPassword123                     # NOTE: Docker 3M Development section provides a functioning MongoDB
