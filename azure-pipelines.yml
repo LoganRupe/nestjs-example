@@ -47,7 +47,8 @@ stages:
     dependsOn: [PreInstallJob]
     steps:
       - bash: make install
-        env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+        env: 
+          CONTAINER_NAME_WORKER_SUFFIX: _d
 - stage: DevBuildStage
   displayName: Development Build
   jobs:
@@ -55,7 +56,8 @@ stages:
     displayName: Build
     steps:
     - bash: make build
-      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
 - stage: CodeVerificationStage
   displayName: Code Verification (Lint, Audit, Unit Test)
   jobs:
@@ -64,19 +66,22 @@ stages:
     dependsOn: []
     steps:
     - bash: make lint
-      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
   - job: AuditJob
     displayName: Audit
     dependsOn: []
     steps:
     - bash: make audit
-      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
   - job: TestJob
     displayName: Test (Unit Tests)
     dependsOn: []
     steps:
     - bash: make test
-      env: { CONTAINER_NAME_WORKER_SUFFIX: _d }
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
@@ -127,7 +132,8 @@ stages:
     dependsOn: [PreProdBuildJob]
     steps:
     - bash: make start_container
-      env: { CONTAINER_NAME_SERVICE_SUFFIX: _d }
+      env: 
+        CONTAINER_NAME_SERVICE_SUFFIX: _d
   - job: APIHealthCheckJob
     displayName: API Health Check
     dependsOn: [ProdStartServiceJob]
