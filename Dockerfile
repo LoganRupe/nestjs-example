@@ -48,6 +48,9 @@ RUN npm cache clean --force
 # Bundle app source
 COPY --chown=node:node . ./
 
+# Build app
+RUN yarn build
+
 # Run the web service on container startup
 CMD [ "node", "dist/main" ]
 
