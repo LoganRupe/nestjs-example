@@ -143,7 +143,7 @@ stages:
     condition: eq(variables['Agent.OS'], 'Windows_NT')
   - job: APIHealthCheckBashJob
     displayName: API Health Check
-    condition: in(variables['Agent.OS'], 'Darwin', 'Linux')
+    condition: eq(variables['Agent.OS'], 'Linux')
     dependsOn: [ProdStartServiceJob]
     steps:
     - checkout: self
