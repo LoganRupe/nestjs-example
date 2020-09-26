@@ -40,7 +40,7 @@ stages:
         displayName: 'Delete existing environment settings (.env)'
         inputs:
           contents: .env
-      - script: mv $(ENV_FILENAME_DEV) .env
+      - bash: mv $(ENV_FILENAME_DEV) .env
         displayName: Rename environment settings file to corrent filename
   - job: InstallJob
     displayName: Install
@@ -120,7 +120,7 @@ stages:
         displayName: 'Delete existing environment settings (.env)'
         inputs:
           contents: .env
-      - script: mv $(ENV_FILENAME_PROD) .env
+      - bash: mv $(ENV_FILENAME_PROD) .env
         displayName: Rename environment settings file to corrent filename
   - job: ProdStartServiceJob
     displayName: Start Production Service (docker-compose run)
