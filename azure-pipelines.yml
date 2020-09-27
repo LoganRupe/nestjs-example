@@ -37,7 +37,7 @@ stages:
       inputs:
         SourceFolder: '$(Agent.TempDirectory)'
         Contents: $(ENV_FILENAME_DEV)
-        TargetFolder: '$(Build.SourcesDirectory)'
+        TargetFolder: '$(Build.SourcesDirectory)/nestjs-example'
         overWrite: true
     - task: DeleteFiles@1
       displayName: 'Delete existing environment settings (.env)'
@@ -49,9 +49,11 @@ stages:
     displayName: Install
     dependsOn: [PreInstallJob]
     steps:
-      - script: make install
-        env: 
-          CONTAINER_NAME_WORKER_SUFFIX: _d
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
+    - script: make install
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
 - stage: DevBuildStage
   displayName: Development Build
   jobs:
@@ -134,7 +136,7 @@ stages:
       inputs:
         SourceFolder: '$(Agent.TempDirectory)'
         Contents: $(ENV_FILENAME_PROD)
-        TargetFolder: '$(Build.SourcesDirectory)'
+        TargetFolder: '$(Build.SourcesDirectory)/nestjs-example'
         overWrite: true
     - task: DeleteFiles@1
       displayName: 'Delete existing environment settings (.env)'
@@ -146,13 +148,17 @@ stages:
     displayName: Start Production Service (docker-compose run)
     dependsOn: [PreProdBuildJob]
     steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make start_container
       env: 
         CONTAINER_NAME_SERVICE_SUFFIX: _d
   - job: APIHealthCheckJob
     displayName: API Health Check
     dependsOn: [ProdStartServiceJob]
-    steps:
+    steps:      
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - task: ShellScript@2
       inputs:
         scriptPath: ./build_scripts/API_health_checker.sh
@@ -162,6 +168,8 @@ stages:
     displayName: Test API (postman/newman)
     dependsOn: APIHealthCheckJob
     steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make test_api
 - stage: CleanStage
   displayName: Clean
