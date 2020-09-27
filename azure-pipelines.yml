@@ -24,27 +24,27 @@ stages:
   jobs:
   - job: PreInstallJob
     displayName: Pre-Install
-    steps:      
-      - checkout: self
-      - checkout: ApiBuildScriptsRepo
-        path: s/nestjs-example/build_scripts
-      - task: DownloadSecureFile@1
-        displayName: Secure Download Development environment settings (.env)
-        inputs:
-          secureFile: $(ENV_FILENAME_DEV)
-      - task: CopyFiles@2
-        displayName: Copy environment settings to Source Folder
-        inputs:
-          SourceFolder: '$(Agent.TempDirectory)'
-          Contents: $(ENV_FILENAME_DEV)
-          TargetFolder: '$(Build.SourcesDirectory)'
-          overWrite: true
-      - task: DeleteFiles@1
-        displayName: 'Delete existing environment settings (.env)'
-        inputs:
-          contents: .env
-      - bash: mv $(ENV_FILENAME_DEV) .env
-        displayName: Rename environment settings file to corrent filename
+    steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
+      path: s/nestjs-example/build_scripts
+    - task: DownloadSecureFile@1
+      displayName: Secure Download Development environment settings (.env)
+      inputs:
+        secureFile: $(ENV_FILENAME_DEV)
+    - task: CopyFiles@2
+      displayName: Copy environment settings to Source Folder
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: $(ENV_FILENAME_DEV)
+        TargetFolder: '$(Build.SourcesDirectory)'
+        overWrite: true
+    - task: DeleteFiles@1
+      displayName: 'Delete existing environment settings (.env)'
+      inputs:
+        contents: .env
+    - bash: mv $(ENV_FILENAME_DEV) .env
+      displayName: Rename environment settings file to corrent filename
   - job: InstallJob
     displayName: Install
     dependsOn: [PreInstallJob]
@@ -58,6 +58,8 @@ stages:
   - job: BuildJob
     displayName: Build
     steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make build
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
@@ -68,6 +70,8 @@ stages:
     displayName: Lint
     dependsOn: []
     steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make lint
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
@@ -75,6 +79,8 @@ stages:
     displayName: Audit
     dependsOn: []
     steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make audit
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
@@ -82,6 +88,8 @@ stages:
     displayName: Test (Unit Tests)
     dependsOn: []
     steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make test
       env: 
         CONTAINER_NAME_WORKER_SUFFIX: _d
@@ -101,7 +109,9 @@ stages:
   jobs:
   - job: ProdBuildContainerJob
     displayName: Build Production Container (Docker Image)
-    steps:
+    steps:      
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make build_container
 #  - job: ProdBuildServiceJob
 #    displayName: Build Production Service (docker-compose)
@@ -112,24 +122,26 @@ stages:
   jobs:
   - job: PreProdBuildJob
     displayName: Pre-Build for Prod
-    steps:
-      - task: DownloadSecureFile@1
-        displayName: Secure Download Production environment settings (.env)
-        inputs:
-          secureFile: $(ENV_FILENAME_PROD)
-      - task: CopyFiles@2
-        displayName: Copy environment settings to Source Folder
-        inputs:
-          SourceFolder: '$(Agent.TempDirectory)'
-          Contents: $(ENV_FILENAME_PROD)
-          TargetFolder: '$(Build.SourcesDirectory)'
-          overWrite: true
-      - task: DeleteFiles@1
-        displayName: 'Delete existing environment settings (.env)'
-        inputs:
-          contents: .env
-      - bash: mv $(ENV_FILENAME_PROD) .env
-        displayName: Rename environment settings file to corrent filename
+    steps:      
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
+    - task: DownloadSecureFile@1
+      displayName: Secure Download Production environment settings (.env)
+      inputs:
+        secureFile: $(ENV_FILENAME_PROD)
+    - task: CopyFiles@2
+      displayName: Copy environment settings to Source Folder
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: $(ENV_FILENAME_PROD)
+        TargetFolder: '$(Build.SourcesDirectory)'
+        overWrite: true
+    - task: DeleteFiles@1
+      displayName: 'Delete existing environment settings (.env)'
+      inputs:
+        contents: .env
+    - bash: mv $(ENV_FILENAME_PROD) .env
+      displayName: Rename environment settings file to corrent filename
   - job: ProdStartServiceJob
     displayName: Start Production Service (docker-compose run)
     dependsOn: [PreProdBuildJob]
@@ -157,4 +169,6 @@ stages:
   - job: CleanJob
     displayName: Clean Container Instances (docker-compose down)
     steps:
+    - checkout: self
+    - checkout: ApiBuildScriptsRepo
     - script: make clean
