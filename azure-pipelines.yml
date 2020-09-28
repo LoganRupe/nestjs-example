@@ -42,9 +42,14 @@ stages:
         contents: .env
     - bash: mv $(ENV_FILENAME_DEV) .env
       displayName: Rename environment settings file to corrent filename
+  - job: CleanJob
+    displayName: Clean Container Instances (docker-compose down)
+    dependsOn: [PreInstallJob]
+    steps:
+    - script: make clean
   - job: InstallJob
     displayName: Install
-    dependsOn: [PreInstallJob]
+    dependsOn: [CleanJob]
     steps:
     - script: make install
       env: 
