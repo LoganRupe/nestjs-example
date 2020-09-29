@@ -75,7 +75,7 @@ _audit:
 
 # Postman / Newman Test API
 test_api:
-	$(POSTMAN) run nestjs.postman_collection.json --environment=nestjs.postman_environment.json --reporters cli, junit --reporter-junit-export="newman-report.xml"
+	$(POSTMAN) run nestjs.postman_collection.json --environment=nestjs.postman_environment.json --reporters cli,junit --reporter-junit-export="newman-report.xml"
 
 # Starts Mongo Express (Web Based Mongo Admin Interface)
 mongo_express:
