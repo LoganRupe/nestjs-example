@@ -147,7 +147,7 @@ stages:
     - task: Bash@3
       inputs:
         filePath: API_health_checker.sh
-        args: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
+        arguments: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
       continueOnError: true
   - job: TestAPIJob
     displayName: Test API (postman/newman)
