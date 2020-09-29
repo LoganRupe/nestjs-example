@@ -154,6 +154,11 @@ stages:
     dependsOn: APIHealthCheckJob
     steps:
     - script: make test_api
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: '**/newman-report.xml'
 - stage: CleanStage
   displayName: Clean
   jobs:
