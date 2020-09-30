@@ -4,6 +4,7 @@ NestJS Example - Test / Playground area
 ## Table of Content
 
 - [About](#about)
+- [Status](#status)
 - [Project Structure](#project-structure)
 - [Local Development](#local-development)
 - [Docker and 3M](#docker-and-3m)
@@ -25,6 +26,14 @@ NestJS Example - Test / Playground area
 This is a NestJS example used as a testing area.
 
 This is built with (`NestJS`, `Fastify`, `Yarn`, `Typescript`, `Docker`).
+
+## Status
+| Build & Test |
+|:-----:|
+|[![Build & Test][docker-build-badge]][docker-build]| 
+
+[docker-build-badge]: https://loganrupe.visualstudio.com/nestjs-example/_apis/build/status/LoganRupe.nestjs-example?repoName=LoganRupe%2Fnestjs-example&branchName=master
+[docker-build]: https://loganrupe.visualstudio.com/nestjs-example/_build/latest?definitionId=1&repoName=LoganRupe%2Fnestjs-example&branchName=master
 
 ## Local Development
 NOTE: Best to use Docker/3M for development. See: [Docker 3M Development (preferred)](#docker-3m-development-preferred)
