@@ -1,0 +1,168 @@
+# NestJS Example Azure DevOps Pipeline - https://github.com/LoganRupe/nestjs-example
+# More info: https://aka.ms/yaml
+
+variables:
+  - group: build-pipeline-vars
+
+resources:
+  repositories:
+  - repository: ApiBuildScriptsRepo # The name used to reference this repository in the checkout step
+    type: github
+    endpoint: LoganRupe    
+    name: LoganRupe/api-build-scripts
+
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+- master
+
+pool: Default
+
+stages:   
+- stage: InstallStage
+  displayName: Install
+  jobs:
+  - job: PreInstallJob
+    displayName: Pre-Install
+    steps:
+    - task: DownloadSecureFile@1
+      displayName: Secure Download Development environment settings (.env)
+      inputs:
+        secureFile: $(ENV_FILENAME_DEV)
+    - task: CopyFiles@2
+      displayName: Copy environment settings to Source Folder
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: $(ENV_FILENAME_DEV)
+        TargetFolder: '$(Build.SourcesDirectory)'
+        overWrite: true
+    - task: DeleteFiles@1
+      displayName: 'Delete existing environment settings (.env)'
+      inputs:
+        contents: .env
+    - bash: mv $(ENV_FILENAME_DEV) .env
+      displayName: Rename environment settings file to corrent filename
+  - job: CleanJob
+    displayName: Clean Container Instances (docker-compose down)
+    dependsOn: [PreInstallJob]
+    steps:
+    - script: make clean
+  - job: InstallJob
+    displayName: Install
+    dependsOn: [CleanJob]
+    steps:
+    - script: make install
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
+- stage: DevBuildStage
+  displayName: Development Build
+  jobs:
+  - job: BuildJob
+    displayName: Build
+    steps:
+    - script: make build
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
+- stage: CodeVerificationStage
+  displayName: Code Verification (Lint, Audit, Unit Test)
+  jobs:
+  - job: LintJob
+    displayName: Lint
+    dependsOn: []
+    steps:
+    - script: make lint
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
+  - job: AuditJob
+    displayName: Audit
+    dependsOn: []
+    steps:
+    - script: make audit
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
+  - job: TestJob
+    displayName: Test (Unit Tests)
+    dependsOn: []
+    steps:
+    - script: make test
+      env: 
+        CONTAINER_NAME_WORKER_SUFFIX: _d
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: '**/junit.xml'
+    - task: PublishCodeCoverageResults@1
+      inputs: 
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+- stage: ProductionBuildStage
+  displayName: Production Build (image) 
+# and service)
+  jobs:
+  - job: ProdBuildContainerJob
+    displayName: Build Production Container (Docker Image)
+    steps:
+    - script: make build_container
+#  - job: ProdBuildServiceJob
+#    displayName: Build Production Service (docker-compose)
+#    steps:
+#    - script: make build_service
+- stage: ValidateProductionStage
+  displayName: Validate Production (Start Service and API Test)
+  jobs:
+  - job: PreProdBuildJob
+    displayName: Pre-Build for Prod
+    steps:
+    - task: DownloadSecureFile@1
+      displayName: Secure Download Production environment settings (.env)
+      inputs:
+        secureFile: $(ENV_FILENAME_PROD)
+    - task: CopyFiles@2
+      displayName: Copy environment settings to Source Folder
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: $(ENV_FILENAME_PROD)
+        TargetFolder: '$(Build.SourcesDirectory)'
+        overWrite: true
+    - task: DeleteFiles@1
+      displayName: 'Delete existing environment settings (.env)'
+      inputs:
+        contents: .env
+    - bash: mv $(ENV_FILENAME_PROD) .env
+      displayName: Rename environment settings file to corrent filename
+  - job: ProdStartServiceJob
+    displayName: Start Production Service (docker-compose run)
+    dependsOn: [PreProdBuildJob]
+    steps:
+    - script: make start_container
+      env: 
+        CONTAINER_NAME_SERVICE_SUFFIX: _d
+  - job: APIHealthCheckJob
+    displayName: API Health Check
+    dependsOn: [ProdStartServiceJob]
+    steps:      
+    - checkout: ApiBuildScriptsRepo
+    - task: Bash@3
+      inputs:
+        filePath: API_health_checker.sh
+        arguments: $(API_HEALTH_CHECK_URL) $(API_HEALTH_CHECK_TIMEOUT)
+      continueOnError: true
+  - job: TestAPIJob
+    displayName: Test API (postman/newman)
+    dependsOn: APIHealthCheckJob
+    steps:
+    - script: make test_api
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: '**/newman-report.xml'
+- stage: CleanStage
+  displayName: Clean
+  jobs:
+  - job: CleanJob
+    displayName: Clean Container Instances (docker-compose down)
+    steps:
+    - script: make clean

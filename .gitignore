@@ -17,6 +17,7 @@ lerna-debug.log*
 /coverage
 /.nyc_output
 junit.xml
+assets/postman/newman-report.xml
 
 # IDEs and editors
 /.idea
@@ -40,4 +41,3 @@ junit.xml
 
 # Docker Environment Variables (Can be appended/overriden by Build Pipelines, don't commit changes)
 .env
-assets/postman/newman-report.xml
